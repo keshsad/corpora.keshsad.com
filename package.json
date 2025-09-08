@@ -13,7 +13,7 @@
   "commands": [
     {
       "name": "detail",
-      "title": "WTF is this?",
+      "title": "Explain Extension",
       "description": "Explain this extension with AI.",
       "mode": "view",
       "subtitle": "Extendo",
@@ -37,6 +37,20 @@
       "name": "form",
       "title": "New Corpus",
       "description": "Set a new Corpus into LocalStorage.",
+      "mode": "view",
+      "subtitle": "Extendo"
+    },
+    {
+      "name": "fetch",
+      "title": "Fetch Context",
+      "description": "Fetch Context from a Corpus.",
+      "mode": "view",
+      "subtitle": "Extendo"
+    },
+    {
+      "name": "update",
+      "title": "Update Context",
+      "description": "Update Context from a Corpus.",
       "mode": "view",
       "subtitle": "Extendo"
     }

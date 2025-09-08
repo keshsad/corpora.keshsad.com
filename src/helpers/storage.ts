@@ -1,4 +1,4 @@
-import { Corpus, NewCorpusFormInput } from "../types"
+import { Corpus, CorpusInput } from "../types"
 import { LocalStorage } from "@raycast/api"
 import { UUID } from "crypto"
 
@@ -23,23 +23,27 @@ export async function getCorpus(id: UUID): Promise<Corpus | undefined> {
   const item = await LocalStorage.getItem<string>(id)
   if (!item) return undefined
 
-  const corpus: Corpus = JSON.parse(item)
-  return corpus
+  return JSON.parse(item) as Corpus
 }
 
 export async function corpusExists(id: UUID): Promise<boolean> {
-  const item = await LocalStorage.getItem<string>(id)
-  return item !== undefined
+  return await getCorpus(id) !== undefined
 }
 
-export async function setCorpus(id: UUID, corpus: NewCorpusFormInput) {
-  await LocalStorage.setItem(id, JSON.stringify(corpus))
+export async function setCorpus(item: CorpusInput) {
+  const json: Corpus = { ...item, folder: item.folder[0] }
+  await LocalStorage.setItem(item.id, JSON.stringify(json))
 }
 
 export async function deleteCorpus(id: UUID) {
   await LocalStorage.removeItem(id)
 }
 
-export async function clearCorpora() {
+export async function nukeCorpora() {
   await LocalStorage.clear()
+}
+
+export async function printLocalStorage() {
+  const allItems = await LocalStorage.allItems()
+  console.log(allItems)
 }
