@@ -70,88 +70,84 @@ const newCorpus = async () => {
 
 const editCorpus = async (itemId: UUID) => {
   const corpus: Corpus | undefined = await getCorpus(itemId)
-  let corpusInput
-  if (!corpus) {
-    corpusInput = {
-    }
-    await launchCommand({
-      name: "form",
-      extensionName: "extendo",
-      ownerOrAuthorName: "rishi-sadanandan",
-      type: LaunchType.UserInitiated,
-      //context: { ...corpusInput }
-    })
-  }
+  if (!corpus) return
+  await launchCommand({
+    name: "form",
+    extensionName: "extendo",
+    ownerOrAuthorName: "rishi-sadanandan",
+    type: LaunchType.UserInitiated,
+    context: corpus, // Pass as launchContext
+  })
+}
 
-  const emptyActions = (
-    <ActionPanel>
-      <Action title="New Corpus" icon={Icon.PlusTopRightSquare} onAction={async () => newCorpus()} />
+const emptyActions = (
+  <ActionPanel>
+    <Action title="New Corpus" icon={Icon.PlusTopRightSquare} onAction={async () => newCorpus()} />
+  </ActionPanel>
+)
+
+const actions = (item: Corpus, reload: () => void) => {
+  return (
+    <ActionPanel title={item.title}>
+      <Action.CopyToClipboard title="Copy Context" content={"clipboard copy of all markdown context documents"} />
+      <Action.ShowInFinder title="Show in Finder" path={item.folder} />
+      <ActionPanel.Section title="Context">
+        <Action title="Print Local Storage"
+          icon={Icon.Box}
+          onAction={async () => await printLocalStorage()}
+          shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "return" }, windows: { modifiers: ["ctrl", "shift"], key: "return" } }}
+        />
+        <Action.Push
+          title="Fetch"
+          target={<FetchContextForm />}
+          shortcut={{ macOS: { modifiers: ["cmd"], key: "f" }, windows: { modifiers: ["ctrl"], key: "f" } }}
+        />
+        <Action.Push
+          title="Update"
+          target={<UpdateContextForm />}
+          shortcut={{ macOS: { modifiers: ["cmd"], key: "u" }, windows: { modifiers: ["ctrl"], key: "u" } }}
+        />
+      </ActionPanel.Section>
+      <ActionPanel.Section>
+        <Action
+          title="Edit Corpus"
+          icon={Icon.Pencil}
+          onAction={async () => {
+            await editCorpus(item.id)
+            reload()
+          }}
+          shortcut={{ macOS: { modifiers: ["cmd"], key: "e" }, windows: { modifiers: ["ctrl"], key: "e" } }}
+        />
+        <Action
+          title="New Corpus"
+          icon={Icon.PlusTopRightSquare}
+          onAction={async () => {
+            await newCorpus()
+            reload()
+          }}
+          shortcut={{ macOS: { modifiers: ["cmd"], key: "n" }, windows: { modifiers: ["ctrl"], key: "n" } }}
+        />
+        <Action
+          title="Delete Corpus"
+          icon={Icon.XMarkTopRightSquare}
+          style={Action.Style.Destructive}
+          onAction={async () => {
+            await deleteCorpus(item.id)
+            reload()
+          }}
+          shortcut={{ macOS: { modifiers: [], key: "backspace" }, windows: { modifiers: [], key: "backspace" } }}
+        />
+        <Action
+          title="Nuke Corpora"
+          icon={Icon.Trash}
+          style={Action.Style.Destructive}
+          onAction={async () => {
+            await nukeCorpora()
+            reload()
+          }}
+          shortcut={{ macOS: { modifiers: ["cmd"], key: "backspace" }, windows: { modifiers: ["ctrl"], key: "backspace" } }}
+        />
+      </ActionPanel.Section>
     </ActionPanel>
   )
-
-  const actions = (item: Corpus, reload: () => void) => {
-    return (
-      <ActionPanel title={item.title}>
-        <Action.CopyToClipboard title="Copy Context" content={"clipboard copy of all markdown context documents"} />
-        <Action.ShowInFinder title="Show in Finder" path={item.folder} />
-        <ActionPanel.Section title="Context">
-          <Action title="Print Local Storage"
-            icon={Icon.Box}
-            onAction={async () => await printLocalStorage()}
-            shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "return" }, windows: { modifiers: ["ctrl", "shift"], key: "return" } }}
-          />
-          <Action.Push
-            title="Fetch"
-            target={<FetchContextForm />}
-            shortcut={{ macOS: { modifiers: ["cmd"], key: "f" }, windows: { modifiers: ["ctrl"], key: "f" } }}
-          />
-          <Action.Push
-            title="Update"
-            target={<UpdateContextForm />}
-            shortcut={{ macOS: { modifiers: ["cmd"], key: "u" }, windows: { modifiers: ["ctrl"], key: "u" } }}
-          />
-        </ActionPanel.Section>
-        <ActionPanel.Section>
-          <Action.Push
-            title="Edit Corpus"
-            icon={Icon.Pencil}
-            target={<CorpusForm launchType={LaunchType.UserInitiated} launchContext={item} />}
-            //onAction={async () => {
-            //  editCorpus(item.id)
-            //  reload()
-            //}}
-            shortcut={{ macOS: { modifiers: ["cmd"], key: "e" }, windows: { modifiers: ["ctrl"], key: "e" } }}
-          />
-          <Action
-            title="New Corpus"
-            icon={Icon.PlusTopRightSquare}
-            onAction={async () => {
-              newCorpus()
-              reload()
-            }}
-            shortcut={{ macOS: { modifiers: ["cmd"], key: "n" }, windows: { modifiers: ["ctrl"], key: "n" } }}
-          />
-          <Action
-            title="Delete Corpus"
-            icon={Icon.XMarkTopRightSquare}
-            style={Action.Style.Destructive}
-            onAction={async () => {
-              deleteCorpus(item.id)
-              reload()
-            }}
-            shortcut={{ macOS: { modifiers: [], key: "backspace" }, windows: { modifiers: [], key: "backspace" } }}
-          />
-          <Action
-            title="Nuke Corpora"
-            icon={Icon.Trash}
-            style={Action.Style.Destructive}
-            onAction={async () => {
-              nukeCorpora()
-              reload()
-            }}
-            shortcut={{ macOS: { modifiers: ["cmd"], key: "backspace" }, windows: { modifiers: ["ctrl"], key: "backspace" } }}
-          />
-        </ActionPanel.Section>
-      </ActionPanel>
-    )
-  }
+}
