@@ -1,11 +1,8 @@
 import { Action, ActionPanel, Icon, launchCommand, LaunchType, List } from "@raycast/api"
 import { useEffect, useState } from "react"
 import { deleteCorpus, getCorpora, getCorpus, nukeCorpora, printLocalStorage } from "./helpers/storage"
-import { Corpus, CorpusInput } from "./types"
-import FetchContextForm from "./fetch"
-import UpdateContextForm from "./update"
+import { Corpus } from "./types"
 import { UUID } from "crypto"
-import CorpusForm from "./form"
 
 function Dropdown() {
   return (
@@ -22,7 +19,7 @@ function Dropdown() {
 export default function ViewCorporaList() {
   const [searchText, setSearchText] = useState("")
   const [items, setItems] = useState<Corpus[]>([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => { loadItems() }, [])
 
@@ -62,8 +59,6 @@ export default function ViewCorporaList() {
 const newCorpus = async () => {
   await launchCommand({
     name: "form",
-    extensionName: "extendo",
-    ownerOrAuthorName: "rishi-sadanandan",
     type: LaunchType.UserInitiated,
   })
 }
@@ -73,8 +68,6 @@ const editCorpus = async (itemId: UUID) => {
   if (!corpus) return
   await launchCommand({
     name: "form",
-    extensionName: "extendo",
-    ownerOrAuthorName: "rishi-sadanandan",
     type: LaunchType.UserInitiated,
     context: corpus, // Pass as launchContext
   })
@@ -83,6 +76,11 @@ const editCorpus = async (itemId: UUID) => {
 const emptyActions = (
   <ActionPanel>
     <Action title="New Corpus" icon={Icon.PlusTopRightSquare} onAction={async () => newCorpus()} />
+    <Action title="Print Local Storage"
+      icon={Icon.Box}
+      onAction={async () => await printLocalStorage()}
+      shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "return" }, windows: { modifiers: ["ctrl", "shift"], key: "return" } }}
+    />
   </ActionPanel>
 )
 
@@ -91,24 +89,22 @@ const actions = (item: Corpus, reload: () => void) => {
     <ActionPanel title={item.title}>
       <Action.CopyToClipboard title="Copy Context" content={"clipboard copy of all markdown context documents"} />
       <Action.ShowInFinder title="Show in Finder" path={item.folder} />
-      <ActionPanel.Section title="Context">
-        <Action title="Print Local Storage"
-          icon={Icon.Box}
-          onAction={async () => await printLocalStorage()}
-          shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "return" }, windows: { modifiers: ["ctrl", "shift"], key: "return" } }}
-        />
-        <Action.Push
-          title="Fetch"
-          target={<FetchContextForm />}
-          shortcut={{ macOS: { modifiers: ["cmd"], key: "f" }, windows: { modifiers: ["ctrl"], key: "f" } }}
-        />
-        <Action.Push
-          title="Update"
-          target={<UpdateContextForm />}
-          shortcut={{ macOS: { modifiers: ["cmd"], key: "u" }, windows: { modifiers: ["ctrl"], key: "u" } }}
-        />
-      </ActionPanel.Section>
       <ActionPanel.Section>
+        <Action
+          title="New Corpus"
+          icon={Icon.PlusTopRightSquare}
+          onAction={async () => {
+            await newCorpus()
+            reload()
+          }}
+          shortcut={{ macOS: { modifiers: ["cmd"], key: "n" }, windows: { modifiers: ["ctrl"], key: "n" } }}
+        />
+        <Action.Push
+          title="View Corpus"
+          icon={Icon.Book}
+          target={<ViewCorpusDetail item={item} />}
+          shortcut={{ macOS: { modifiers: ["cmd"], key: "v" }, windows: { modifiers: ["ctrl"], key: "v" } }}
+        />
         <Action
           title="Edit Corpus"
           icon={Icon.Pencil}
@@ -119,15 +115,6 @@ const actions = (item: Corpus, reload: () => void) => {
           shortcut={{ macOS: { modifiers: ["cmd"], key: "e" }, windows: { modifiers: ["ctrl"], key: "e" } }}
         />
         <Action
-          title="New Corpus"
-          icon={Icon.PlusTopRightSquare}
-          onAction={async () => {
-            await newCorpus()
-            reload()
-          }}
-          shortcut={{ macOS: { modifiers: ["cmd"], key: "n" }, windows: { modifiers: ["ctrl"], key: "n" } }}
-        />
-        <Action
           title="Delete Corpus"
           icon={Icon.XMarkTopRightSquare}
           style={Action.Style.Destructive}
@@ -135,7 +122,7 @@ const actions = (item: Corpus, reload: () => void) => {
             await deleteCorpus(item.id)
             reload()
           }}
-          shortcut={{ macOS: { modifiers: [], key: "backspace" }, windows: { modifiers: [], key: "backspace" } }}
+          shortcut={{ macOS: { modifiers: ["cmd"], key: "d" }, windows: { modifiers: ["ctrl"], key: "d" } }}
         />
         <Action
           title="Nuke Corpora"
@@ -145,9 +132,25 @@ const actions = (item: Corpus, reload: () => void) => {
             await nukeCorpora()
             reload()
           }}
-          shortcut={{ macOS: { modifiers: ["cmd"], key: "backspace" }, windows: { modifiers: ["ctrl"], key: "backspace" } }}
+          shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "d" }, windows: { modifiers: ["ctrl", "shift"], key: "d" } }}
         />
       </ActionPanel.Section>
+      <Action title="Print Local Storage"
+        icon={Icon.Box}
+        onAction={async () => await printLocalStorage()}
+        shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "return" }, windows: { modifiers: ["ctrl", "shift"], key: "return" } }}
+      />
     </ActionPanel>
   )
 }
+
+const ViewCorpusDetail = async ({ item }: { item: Corpus }) => {
+  console.log("item:", item)
+  const detail = <List.Item.Detail markdown={`# README\n\nExtendo is a Raycast extension designed for Raycast Pro users who leverage advanced AI models. It addresses the limitations of Raycast’s Finder AI Extension by providing a robust, AI-powered project and context management system. Extendo allows you to define project-specific AI steering documents within “.ray” directories, enabling more relevant and dynamic AI conversations. By using file operations, the “get-documents” tool for context retrieval, and the “upsert-documents” tool for context creation and updating, Extendo enhances Raycast AI with deeper awareness of your codebases, journals, and other projects. Extendo intelligently orchestrates interactions between your AI Presets (defining behavior) and project-specific contexts, allowing for a more personalized and effective AI experience.`} />
+  return (
+    <List isShowingDetail={true}>
+      <List.Item title="Item 1" detail={detail} />
+    </List>
+  )
+}
+
