@@ -2,11 +2,11 @@ import { UUID } from "crypto"
 
 export type Corpus = {
   id: UUID
-  folder: string[]
+  folder: string
   title: string
 }
 
-export type NewCorpusFormInput = {
+export type CorpusInput = {
   id: UUID
   folder: string[]
   title: string
