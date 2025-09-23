@@ -1,16 +1,6 @@
-# Extendo
+# Corpora
 
-Corpora is a Raycast extension designed for Raycast Pro users who leverage advanced AI models.
-
-Corpora creates project-specific AI context/steering documents, enabling more dynamic and accurate AI conversations. It addresses the limitations of Raycast’s Finder AI Extension by providing a robust, AI-powered project and context management system.
-
-By using file operations, the `get-documents` tool for context retrieval, and the `upsert-documents` tool for context creation and updating, Corpora enhances Raycast AI with deeper awareness of your codebases, journals, and other projects.
-
-Corpora intelligently orchestrates interactions between your AI Presets (defining behavior) and project-specific contexts, allowing for a more personalized and effective AI experience.
-=======
-Corpora is a [Raycast AI Extension](https://developers.raycast.com/ai/learn-core-concepts-of-ai-extensions) for [Pro](https://www.raycast.com/pro) users. It makes your [AI Chats](https://www.raycast.com/core-features/ai), [Presets](https://ray.so/presets/code), and [Prompts](https://ray.so/prompts/code) more accurate and context-aware.
-
-Corpora will be on the [Raycast Store](https://www.raycast.com/store) soon. Learn more about AI Extensions with the [Raycast Manual](https://manual.raycast.com/ai-extensions).
+Corpora is a [Raycast AI Extension](https://developers.raycast.com/ai/learn-core-concepts-of-ai-extensions) for [Pro](https://www.raycast.com/pro) users. It makes your [AI Chats](https://www.raycast.com/core-features/ai), [Presets](https://ray.so/presets/code), and [Prompts](https://ray.so/prompts/code) more accurate and context-aware. Corpora will be on the [Raycast Store](https://www.raycast.com/store) soon. Learn more about AI Extensions with the [Raycast Manual](https://manual.raycast.com/ai-extensions).
 
 ## Background
 
@@ -33,12 +23,10 @@ Use `New Corpus` to convert a Corpus folder into Context documents. Use `View Co
 
 ## Developers
 
-**Requirements**: Raycast Pro, Node.js (`nvm`), GitHub/Linear (DEV), macOS.
+**Requirements**: Raycast Pro, Node.js, macOS
 
-In dev—not in [Raycast Store](https://www.raycast.com/store).
+**Recommendations**: Raycast Pro with Advanced AI, Node.js via `nvm`, Linear/GitHub integration
 
-1. Clone repo: `git clone <url>`.
-2. `bun install && bun run dev`.
-3. Raycast: "Import Extension".
-
-Run "New Corpus": Pick folder/title; auto-init docs. View via "View Corpora" → "View Corpus".
+1. `git clone https://github.com/keshsad/corpora`
+2. `bun install && bun run dev`
+3. `Import Extension` Command
