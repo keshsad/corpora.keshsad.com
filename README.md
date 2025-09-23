@@ -1,89 +1,36 @@
 # Corpora
 
-Corpora is a Raycast extension designed for Raycast Pro users who leverage advanced AI models.
+Corpora is a [Raycast AI Extension](https://developers.raycast.com/ai/learn-core-concepts-of-ai-extensions) for [Pro](https://www.raycast.com/pro) users. It makes your [AI Chats](https://www.raycast.com/core-features/ai), [Presets](https://ray.so/presets/code), and [Prompts](https://ray.so/prompts/code) more accurate and context-aware.
 
-Corpora creates project-specific AI steering documents, enabling more accurate AI conversations.
+Corpora will be on the [Raycast Store](https://www.raycast.com/store) soon. Learn more about AI Extensions with the [Raycast Manual](https://manual.raycast.com/ai-extensions).
 
-It addresses the limitations of Raycast’s Finder AI Extension by providing a custom, AI-powered project and context management system. By using file operations, the `get-documents` tool for context retrieval, and the `upsert-documents` tool for context creation and updating, Corpora enhances Raycast AI with deeper awareness of your codebases, journals, and other projects.
+## Background
 
-Corpora intelligently orchestrates interactions between your AI Presets (defining behavior) and project-specific contexts, allowing for a more personalized and effective AI experience.
+> [Tools](https://developers.raycast.com/information/terminology#tool) are a type of entry point for an [extension](https://developers.raycast.com/information/terminology#extension). As opposed to a [command](https://developers.raycast.com/information/terminology#command), they don't show up in the root search and the user can't directly interact with them. Instead, they are functionalities that the AI can use to interact with an extension.
 
----
+Corpora is just a set of tools and commands to `upsert` and `retrieve` context. Tools are invoked intelligently by Raycast AI, and are the best way to ingest and inject [context]. Commands are invoked intentionally by the user, and are the fastest way to manage a [corpus].
 
-## Corpora
+Raycast's built-in Finder extension can read corpora and create context. But I've improved the workflow according to a few factors:
 
-AI is only as good as its context. Corpora gives your AI durable, project‑specific memory without locking anything into a cloud. It’s a Raycast AI Extension that fits into your existing tools (GitHub, Linear) and stores markdown docs locally, so your workflow stays fast, private, and versionable.
+- [Natural language to tool calls](https://github.com/humanlayer/12-factor-agents/blob/main/content/factor-01-natural-language-to-tool-calls.md). Call [tools](https://developers.raycast.com/information/terminology#tool) by mentioning `@Corpora` in AI Chat, AI Chat Presets, and AI Commands (Prompts).
+- [Own your prompts](https://github.com/humanlayer/12-factor-agents/blob/main/content/factor-02-own-your-prompts.md). They're the language between your logic and your LLM.
+- [Own your context window](https://github.com/humanlayer/12-factor-agents/blob/main/content/factor-03-own-your-context-window.md). Pipeline custom, consolidated inputs to produce the best outputs.
+- [Own your control flow](https://github.com/humanlayer/12-factor-agents/blob/main/content/factor-08-own-your-control-flow.md). Integrate with the way you work, like consuming GitHub PRs and Linear Issues.
+- [Unify execution state and business state](https://github.com/humanlayer/12-factor-agents/blob/main/content/factor-05-unify-execution-state.md). Versionable context, without vendor lock-in.
+- Be a [stateless reducer](https://github.com/humanlayer/12-factor-agents/blob/main/content/factor-12-stateless-reducer.md).
 
-## What it does
+I've also reimplemented `fs` operations to support *all* text-based files (.js, .ts, tsx, .go) and execute intelligently with Raycast AI.
 
-- add, view, and manage a directories as Corpora
-- traverse a Corpus, gather it's context
-- uses `@linear` and `@github` for diffs
-- select, summarize, and inject documents into AI Chat
-- store local JSON at `extension.supportPath/db.json`
+Use `New Corpus` to convert a Corpus folder into Context documents. Use `View Corpura` to list and use the markdown. Or, mention `@Corpora` in AI Chat, AI Chat Presets, and AI Commands to upsert and retrieve context with natural language.
 
-## Why this exists
+## Developers
 
-AI tools will either *forget quickly* or *invent workflows*. Both are costly.
+**Requirements**: Raycast Pro, Node.js (`nvm`), GitHub/Linear (DEV), macOS.
 
-Durable yet malleable context, kept local, enables lean workflows that get smarter as you work.
+In dev—not in [Raycast Store](https://www.raycast.com/store).
 
-Corpora is like connective tissue!
+1. Clone repo: `git clone <url>`.
+2. `bun install && bun run dev`.
+3. Raycast: "Import Extension".
 
-### Principles
-
-- [Local First]()
-- [Linear Method]
-- Lean
-
-## Quick start
-
-> **Requirements:**
-> 
-> - [Raycast Pro]() subscription (ideally, with Advanced AI)
-> - Node installation (ideally, with `nvm`)
-> - GitHub account
-> - Linear account
-> - macOS
-
-This extension is under development and has *not* been published to the [Raycast Store]().
-
-So, clone this repository to your local machine and set a pointer for Raycast using the `Import Extension` command:
-
-- clone this repo
-- do `bun install`
-- do `bun run dev`
-- run `Import Extension`
-
-Create your first Corpus with the `New Corpus` command. Pick a `folder` for the root of your context, and give it a `title`. Corpora initializes context and steering documents for you. Check them out with the `View Corpora` command -> `View Corpus` action.
-
-## Typical workflow
-
-We want to let AI consume stable, versionable context instead of ad‑hoc paste buffers.
-
-- work on Linear Issues and make GitHub PRs
-- git branch and commit often
-- mention @Corpora in AI chat
-- or copy context and paste into AI chat
-
-## Project layout (MVP)
--  Items: local directories tracked as entities
--  Persistence: `supportPath/db.json` (atomic writes)
--  Steering docs: `.corpora/` inside your project root
--  Commands: add/view/manage Items; copy context; open in Finder
-
-## Roadmap
--  M1 (current): Non‑AI commands, persistence, Item management
--  M2: Context engine + AI file I/O helpers
--  M3: Evaluations and richer integrations
-
-## Contributing
--  Keep it small and reversible
--  Favor explicit files over hidden state
--  Use clear conventions in branches/commits (e.g., `DEV-###`)
--  PRs welcome—explain the workflow win first, then the code
-
-## Philosophy (short version)
-Software shouldn’t compete with your workflow; it should harmonize it. Durable local context turns tools into collaborators. Build the minimum glue to let your existing stack think with you.
-
-
+Run "New Corpus": Pick folder/title; auto-init docs. View via "View Corpora" → "View Corpus".
