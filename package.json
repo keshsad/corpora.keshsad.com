@@ -7,9 +7,6 @@
   "author": "rishi-sadanandan",
   "owner": "rishi-sadanandan",
   "license": "MIT",
-  "ai": {
-    "instructions": "When you don't know the user's working directory, ask for it."
-  },
   "commands": [
     {
       "name": "detail",
