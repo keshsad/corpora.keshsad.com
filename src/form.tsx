@@ -20,7 +20,11 @@ export default function NewCorpusForm(props: LaunchProps<{ draftValues: CorpusIn
   const { draftValues, launchContext } = props
 
   const [title, setTitle] = useState<string>(draftValues?.title || launchContext?.title || "")
-  const [folder, setFolder] = useState<string[]>(draftValues?.folder || (launchContext ? [launchContext.folder] : []) || [''])
+  const [folder, setFolder] = useState<string[]>(
+    draftValues?.folder ||
+    (launchContext ? [launchContext.folder] : []) ||
+    ['']
+  )
 
   const textFieldRef = useRef<Form.TextField>(null)
   const filePickerRef = useRef<Form.FilePicker>(null)
