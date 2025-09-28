@@ -2,40 +2,62 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "corpora",
   "title": "Corpora",
-  "description": "Opinionated, hand-crafted commands for modern, high-performance people.",
+  "description": "Organize your agentic workflows and context windows with Raycast Pro.",
   "icon": "extension-icon.png",
   "author": "keshsad",
   "owner": "keshsad",
   "license": "MIT",
   "commands": [
     {
-      "name": "detail",
+      "name": "explain-extension",
       "title": "Explain Extension",
-      "description": "Explain this extension with AI.",
+      "description": "Explain this extension with an optional question.",
       "mode": "view",
       "subtitle": "Corpora",
       "arguments": [
         {
           "name": "question",
-          "placeholder": "Question",
+          "placeholder": "Ask a question...",
           "type": "text",
           "required": false
         }
       ]
     },
     {
-      "name": "list",
-      "title": "View Corpora",
-      "description": "List all Corpora from LocalStorage.",
+      "name": "new-corpus",
+      "title": "New Corpus",
+      "description": "Create a Corpus and its Context Documents.",
       "mode": "view",
       "subtitle": "Corpora"
     },
     {
-      "name": "form",
-      "title": "New Corpus",
-      "description": "Set a new Corpus into LocalStorage.",
+      "name": "manage-corpora",
+      "title": "Manage Corpora",
+      "description": "List every Corpus with its markdown and metadata.",
       "mode": "view",
       "subtitle": "Corpora"
+    },
+    {
+      "name": "view-documents",
+      "title": "View Documents",
+      "description": "List every Context Document with its markdown and metadata.",
+      "mode": "view",
+      "subtitle": "Corpora"
+    },
+    {
+      "name": "search",
+      "title": "Search with Context",
+      "description": "Answer a search query using Context Documents.",
+      "mode": "view",
+      "subtitle": "Corpora",
+      "arguments": [
+        {
+          "name": "search-query",
+          "placeholder": "Search",
+          "type": "text",
+          "required": true
+        }
+      ]
     }
   ],
   "dependencies": {
