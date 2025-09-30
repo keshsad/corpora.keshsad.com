@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Icon, launchCommand, LaunchType, List } from "@raycast/api";
+import { Action, ActionPanel, environment, Icon, launchCommand, LaunchType, List } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { deleteCorpus, getCorpora, getCorpus, nukeCorpora, printLocalStorage } from "./helpers/storage";
 import { Corpus } from "./types";
