@@ -4,8 +4,6 @@ import { setCorpus } from "./helpers/storage";
 import { Corpus, CorpusInput } from "./types";
 import { useRef, useState } from "react";
 import { randomUUID } from "crypto";
-import { join } from "path";
-import { mkdir } from "fs";
 
 export default function NewCorpus(props: LaunchProps<{ draftValues: CorpusInput; launchContext: Corpus }>) {
   const { draftValues, launchContext } = props;
@@ -27,11 +25,6 @@ export default function NewCorpus(props: LaunchProps<{ draftValues: CorpusInput;
           item = { ...values, id: randomUUID() };
           action = "Saved";
           await setCorpus(item);
-
-          const rayDir = join(values.folder[0], ".ray");
-          mkdir(rayDir, { recursive: true }, (err) => {
-            if (err) console.error("Failed to create .ray dir:", err);
-          });
         } else {
           item = { ...values, id: launchContext.id };
           action = "Updated";
@@ -43,11 +36,11 @@ export default function NewCorpus(props: LaunchProps<{ draftValues: CorpusInput;
         filePickerRef.current?.reset();
         popToRoot();
       } catch {
-        console.error("Failed to save corpus");
+        console.error("Failed to save Corpus");
         showToast({
           style: Toast.Style.Failure,
           title: "Uh oh!",
-          message: "Failed to save corpus",
+          message: "Failed to save Corpus",
         });
       }
     },

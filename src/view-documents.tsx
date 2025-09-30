@@ -41,17 +41,23 @@ export default function ViewDocuments() {
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Search..."
     >
-      {searchText === "" && items.length === 0 ? (
-        <List.EmptyView icon="📂" title="No results!" description="Try adding a New Corpus..." actions={emptyActions} />
-      ) : searchText !== "" && filteredItems.length === 0 ? (
-        <List.EmptyView icon="😩" title="No results!" description="Try a different search..." actions={emptyActions} />
-      ) : (
-        <List.Section title="Results" subtitle={filteredItems.length.toString()}>
-          {filteredItems.map((item) => (
-            <List.Item key={item.id} title={item.title} actions={actions(item, loadItems)} />
-          ))}
-        </List.Section>
-      )}
+      <List.Section title="Journal">
+        <List.Item title="Recent" />
+        <List.Item title="Important" />
+        <List.Item title="Background" />
+      </List.Section>
+      <List.Section title="Auth Server">
+        <List.Item title="Serverless Stack" />
+      </List.Section>
+      <List.Section title="Professional Site">
+        <List.Item title="Overview" />
+      </List.Section>
+      <List.Section title="Job Tracker">
+        <List.Item title="User" />
+      </List.Section>
+      <List.Section title="Corpora Extension">
+        <List.Item title="Purpose" />
+      </List.Section>
     </List>
   );
 }
