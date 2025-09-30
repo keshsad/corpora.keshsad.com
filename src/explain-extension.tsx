@@ -1,8 +1,8 @@
-import { AI, LaunchProps, Detail } from "@raycast/api"
-import { useAI } from "@raycast/utils"
+import { AI, LaunchProps, Detail } from "@raycast/api";
+import { useAI } from "@raycast/utils";
 
 export default function ExplainExtension(props: LaunchProps<{ arguments: Arguments.ExplainExtension }>) {
-  const { question } = props.arguments
+  const { question } = props.arguments;
   const prompt = `
   You are responsible for explaining the Extendo Raycast extension to me, the developer.
 
@@ -48,17 +48,18 @@ export default function ExplainExtension(props: LaunchProps<{ arguments: Argumen
 
   This separates concerns: AI Presets focus on behavior, Extendo provides dynamic context, and existing Raycast extensions (GitHub, Linear, Google Calendar, Focus) handle their respective domains.
 
-  ${question
+  ${
+    question
       ? `\n\nUser query: "${question}"\n\nAddress this specific question about Extendo.`
       : `\n\nUse the above information to create an interesting pitch for Extendo.`
-    }`
+  }`;
 
-  console.log(prompt)
+  console.log(prompt);
 
   const { data, isLoading } = useAI(prompt, {
     model: AI.Model["Google_Gemini_2.0_Flash"],
-    creativity: "low"
-  })
+    creativity: "low",
+  });
 
-  return <Detail isLoading={isLoading} markdown={data} />
+  return <Detail isLoading={isLoading} markdown={data} />;
 }

@@ -1,8 +1,8 @@
-import { AI, LaunchProps, Detail } from "@raycast/api"
-import { useAI } from "@raycast/utils"
+import { AI, LaunchProps, Detail } from "@raycast/api";
+import { useAI } from "@raycast/utils";
 
 export default function SearchWithContext(props: LaunchProps<{ arguments: Arguments.Search }>) {
-  const { search } = props.arguments
+  const { search } = props.arguments;
   const prompt = `
     Tool Brainstorm
 
@@ -19,16 +19,14 @@ export default function SearchWithContext(props: LaunchProps<{ arguments: Argume
     Please note that I haven't provided any Context Documents relevant to this query. This is an important step on my roadmap. Use this prompt to answer the following search query:
 
     ${search}
-  `
+  `;
 
-  console.log(prompt)
+  console.log(prompt);
 
   const { data, isLoading } = useAI(prompt, {
     model: AI.Model["OpenAI_GPT5-nano"],
-    creativity: "low"
-  })
+    creativity: "low",
+  });
 
-  return (
-    <Detail isLoading={isLoading} markdown={data} />
-  )
+  return <Detail isLoading={isLoading} markdown={data} />;
 }

@@ -1,8 +1,8 @@
-import { Action, ActionPanel, Icon, launchCommand, LaunchType, List } from "@raycast/api"
-import { useEffect, useState } from "react"
-import { deleteCorpus, getCorpora, getCorpus, nukeCorpora, printLocalStorage } from "./helpers/storage"
-import { Corpus } from "./types"
-import { UUID } from "crypto"
+import { Action, ActionPanel, Icon, launchCommand, LaunchType, List } from "@raycast/api";
+import { useEffect, useState } from "react";
+import { deleteCorpus, getCorpora, getCorpus, nukeCorpora, printLocalStorage } from "./helpers/storage";
+import { Corpus } from "./types";
+import { UUID } from "crypto";
 
 function Dropdown() {
   return (
@@ -13,28 +13,30 @@ function Dropdown() {
         <List.Dropdown.Item title="Markdown" value="Markdown" />
       </List.Dropdown.Section>
     </List.Dropdown>
-  )
+  );
 }
 
 export default function ManageCorpora() {
-  const [searchText, setSearchText] = useState("")
-  const [items, setItems] = useState<Corpus[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [searchText, setSearchText] = useState("");
+  const [items, setItems] = useState<Corpus[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => { loadItems() }, [])
+  useEffect(() => {
+    loadItems();
+  }, []);
 
   const loadItems = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const items = await getCorpora()
-      if (items) setItems(items)
-    } catch { console.error("Failed to fetch Corpora") }
-    setIsLoading(false)
-  }
+      const items = await getCorpora();
+      if (items) setItems(items);
+    } catch {
+      console.error("Failed to fetch Corpora");
+    }
+    setIsLoading(false);
+  };
 
-  const filteredItems = items.filter(item => (
-    item.title.toLowerCase().includes(searchText.toLowerCase())
-  ))
+  const filteredItems = items.filter((item) => item.title.toLowerCase().includes(searchText.toLowerCase()));
 
   return (
     <List
@@ -44,45 +46,52 @@ export default function ManageCorpora() {
       searchBarAccessory={<Dropdown />}
       searchBarPlaceholder="Search..."
     >
-      {(searchText === "" && items.length === 0)
-        ? <List.EmptyView icon="📂" title="No results!" description="Try adding a New Corpus..." actions={emptyActions} />
-        : (searchText !== "" && filteredItems.length === 0)
-          ? <List.EmptyView icon="😩" title="No results!" description="Try a different search..." actions={emptyActions} />
-          : <List.Section title="Results" subtitle={filteredItems.length.toString()}>
-            {filteredItems.map(item => <List.Item key={item.id} title={item.title} actions={actions(item, loadItems)} />)}
-          </List.Section>
-      }
+      {searchText === "" && items.length === 0 ? (
+        <List.EmptyView icon="📂" title="No results!" description="Try adding a New Corpus..." actions={emptyActions} />
+      ) : searchText !== "" && filteredItems.length === 0 ? (
+        <List.EmptyView icon="😩" title="No results!" description="Try a different search..." actions={emptyActions} />
+      ) : (
+        <List.Section title="Results" subtitle={filteredItems.length.toString()}>
+          {filteredItems.map((item) => (
+            <List.Item key={item.id} title={item.title} actions={actions(item, loadItems)} />
+          ))}
+        </List.Section>
+      )}
     </List>
-  )
+  );
 }
 
 const newCorpus = async () => {
   await launchCommand({
     name: "new-corpus",
     type: LaunchType.UserInitiated,
-  })
-}
+  });
+};
 
 const editCorpus = async (itemId: UUID) => {
-  const corpus: Corpus | undefined = await getCorpus(itemId)
-  if (!corpus) return
+  const corpus: Corpus | undefined = await getCorpus(itemId);
+  if (!corpus) return;
   await launchCommand({
     name: "new-corpus",
     type: LaunchType.UserInitiated,
     context: corpus, // Pass as launchContext
-  })
-}
+  });
+};
 
 const emptyActions = (
   <ActionPanel>
     <Action title="New Corpus" icon={Icon.PlusTopRightSquare} onAction={async () => newCorpus()} />
-    <Action title="Print Local Storage"
+    <Action
+      title="Print Local Storage"
       icon={Icon.Box}
       onAction={async () => await printLocalStorage()}
-      shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "return" }, windows: { modifiers: ["ctrl", "shift"], key: "return" } }}
+      shortcut={{
+        macOS: { modifiers: ["cmd", "shift"], key: "return" },
+        windows: { modifiers: ["ctrl", "shift"], key: "return" },
+      }}
     />
   </ActionPanel>
-)
+);
 
 const actions = (item: Corpus, reload: () => void) => {
   return (
@@ -94,8 +103,8 @@ const actions = (item: Corpus, reload: () => void) => {
           title="New Corpus"
           icon={Icon.PlusTopRightSquare}
           onAction={async () => {
-            await newCorpus()
-            reload()
+            await newCorpus();
+            reload();
           }}
           shortcut={{ macOS: { modifiers: ["cmd"], key: "n" }, windows: { modifiers: ["ctrl"], key: "n" } }}
         />
@@ -103,8 +112,8 @@ const actions = (item: Corpus, reload: () => void) => {
           title="Edit Corpus"
           icon={Icon.Pencil}
           onAction={async () => {
-            await editCorpus(item.id)
-            reload()
+            await editCorpus(item.id);
+            reload();
           }}
           shortcut={{ macOS: { modifiers: ["cmd"], key: "e" }, windows: { modifiers: ["ctrl"], key: "e" } }}
         />
@@ -113,8 +122,8 @@ const actions = (item: Corpus, reload: () => void) => {
           icon={Icon.XMarkTopRightSquare}
           style={Action.Style.Destructive}
           onAction={async () => {
-            await deleteCorpus(item.id)
-            reload()
+            await deleteCorpus(item.id);
+            reload();
           }}
           shortcut={{ macOS: { modifiers: ["cmd"], key: "d" }, windows: { modifiers: ["ctrl"], key: "d" } }}
         />
@@ -123,23 +132,35 @@ const actions = (item: Corpus, reload: () => void) => {
           icon={Icon.Trash}
           style={Action.Style.Destructive}
           onAction={async () => {
-            await nukeCorpora()
-            reload()
+            await nukeCorpora();
+            reload();
           }}
-          shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "d" }, windows: { modifiers: ["ctrl", "shift"], key: "d" } }}
+          shortcut={{
+            macOS: { modifiers: ["cmd", "shift"], key: "d" },
+            windows: { modifiers: ["ctrl", "shift"], key: "d" },
+          }}
         />
       </ActionPanel.Section>
       <Action.Push
         title="View Context"
         icon={Icon.Book}
-        target={<List isShowingDetail={true}><List.Item title="README" /><List.Item title="CHANGELOG" /></List>}
+        target={
+          <List isShowingDetail={true}>
+            <List.Item title="README" />
+            <List.Item title="CHANGELOG" />
+          </List>
+        }
         shortcut={{ macOS: { modifiers: ["cmd"], key: "v" }, windows: { modifiers: ["ctrl"], key: "v" } }}
       />
-      <Action title="Print Local Storage"
+      <Action
+        title="Print Local Storage"
         icon={Icon.Box}
         onAction={async () => await printLocalStorage()}
-        shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "return" }, windows: { modifiers: ["ctrl", "shift"], key: "return" } }}
+        shortcut={{
+          macOS: { modifiers: ["cmd", "shift"], key: "return" },
+          windows: { modifiers: ["ctrl", "shift"], key: "return" },
+        }}
       />
     </ActionPanel>
-  )
-}
+  );
+};
