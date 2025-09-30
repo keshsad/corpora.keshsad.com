@@ -16,7 +16,7 @@ import { randomUUID } from "crypto"
 import { join } from "path"
 import { mkdir } from "fs"
 
-export default function NewCorpusForm(props: LaunchProps<{ draftValues: CorpusInput, launchContext: Corpus }>) {
+export default function NewCorpus(props: LaunchProps<{ draftValues: CorpusInput, launchContext: Corpus }>) {
   const { draftValues, launchContext } = props
 
   const [title, setTitle] = useState<string>(draftValues?.title || launchContext?.title || "")

@@ -1,7 +1,7 @@
 import { AI, LaunchProps, Detail } from "@raycast/api"
 import { useAI } from "@raycast/utils"
 
-export default function ExtendoDetail(props: LaunchProps<{ arguments: Arguments.Detail }>) {
+export default function ExplainExtension(props: LaunchProps<{ arguments: Arguments.ExplainExtension }>) {
   const { question } = props.arguments
   const prompt = `
   You are responsible for explaining the Extendo Raycast extension to me, the developer.

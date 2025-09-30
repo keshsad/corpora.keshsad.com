@@ -17,7 +17,7 @@
       "arguments": [
         {
           "name": "question",
-          "placeholder": "Ask a question...",
+          "placeholder": "Question",
           "type": "text",
           "required": false
         }
@@ -52,7 +52,7 @@
       "subtitle": "Corpora",
       "arguments": [
         {
-          "name": "search-query",
+          "name": "search",
           "placeholder": "Search",
           "type": "text",
           "required": true

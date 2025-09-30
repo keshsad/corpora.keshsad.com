@@ -16,7 +16,7 @@ function Dropdown() {
   )
 }
 
-export default function ViewCorporaList() {
+export default function ManageCorpora() {
   const [searchText, setSearchText] = useState("")
   const [items, setItems] = useState<Corpus[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -58,7 +58,7 @@ export default function ViewCorporaList() {
 
 const newCorpus = async () => {
   await launchCommand({
-    name: "form",
+    name: "new-corpus",
     type: LaunchType.UserInitiated,
   })
 }
@@ -67,7 +67,7 @@ const editCorpus = async (itemId: UUID) => {
   const corpus: Corpus | undefined = await getCorpus(itemId)
   if (!corpus) return
   await launchCommand({
-    name: "form",
+    name: "new-corpus",
     type: LaunchType.UserInitiated,
     context: corpus, // Pass as launchContext
   })
@@ -99,12 +99,6 @@ const actions = (item: Corpus, reload: () => void) => {
           }}
           shortcut={{ macOS: { modifiers: ["cmd"], key: "n" }, windows: { modifiers: ["ctrl"], key: "n" } }}
         />
-        <Action.Push
-          title="View Corpus"
-          icon={Icon.Book}
-          target={<ViewCorpusDetail item={item} />}
-          shortcut={{ macOS: { modifiers: ["cmd"], key: "v" }, windows: { modifiers: ["ctrl"], key: "v" } }}
-        />
         <Action
           title="Edit Corpus"
           icon={Icon.Pencil}
@@ -135,6 +129,12 @@ const actions = (item: Corpus, reload: () => void) => {
           shortcut={{ macOS: { modifiers: ["cmd", "shift"], key: "d" }, windows: { modifiers: ["ctrl", "shift"], key: "d" } }}
         />
       </ActionPanel.Section>
+      <Action.Push
+        title="View Context"
+        icon={Icon.Book}
+        target={<List isShowingDetail={true}><List.Item title="README" /><List.Item title="CHANGELOG" /></List>}
+        shortcut={{ macOS: { modifiers: ["cmd"], key: "v" }, windows: { modifiers: ["ctrl"], key: "v" } }}
+      />
       <Action title="Print Local Storage"
         icon={Icon.Box}
         onAction={async () => await printLocalStorage()}
@@ -143,14 +143,3 @@ const actions = (item: Corpus, reload: () => void) => {
     </ActionPanel>
   )
 }
-
-const ViewCorpusDetail = async ({ item }: { item: Corpus }) => {
-  console.log("item:", item)
-  const detail = <List.Item.Detail markdown={`# README\n\nExtendo is a Raycast extension designed for Raycast Pro users who leverage advanced AI models. It addresses the limitations of Raycast’s Finder AI Extension by providing a robust, AI-powered project and context management system. Extendo allows you to define project-specific AI steering documents within “.ray” directories, enabling more relevant and dynamic AI conversations. By using file operations, the “get-documents” tool for context retrieval, and the “upsert-documents” tool for context creation and updating, Extendo enhances Raycast AI with deeper awareness of your codebases, journals, and other projects. Extendo intelligently orchestrates interactions between your AI Presets (defining behavior) and project-specific contexts, allowing for a more personalized and effective AI experience.`} />
-  return (
-    <List isShowingDetail={true}>
-      <List.Item title="Item 1" detail={detail} />
-    </List>
-  )
-}
-
